@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "aqi-watcher"
+version = "0.1.0"
+description = ""
+authors = ["Girish Bhatta <girishbhatta93@gmail.com>"]
+readme = "README.md"
+packages = [{include = "aqi_watcher", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
