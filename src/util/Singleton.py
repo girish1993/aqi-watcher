@@ -1,7 +1,7 @@
 from threading import Lock, Thread
 
 
-class Singleton(type):
+class Singleton:
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
