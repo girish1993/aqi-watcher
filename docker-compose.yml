@@ -5,11 +5,11 @@ services:
     image: timescale/timescaledb:latest-pg14
     restart: always
     ports:
-      - 5432:5432
+      - "30:30"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - /Users/girishbhatta/Documents/personal_repos/aqi-watcher/data:/home/postgres/pgdata/data
+      - ./aqi-watcher/data:/home/postgres/pgdata/data
 
 
