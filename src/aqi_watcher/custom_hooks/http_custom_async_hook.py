@@ -27,9 +27,17 @@ class HttpCustomAsyncHook(BaseHook):
         async with session.request(method=request_obj.method, url=request_obj.url, headers=request_obj.headers) as res:
             return await res.json()
 
-    async def main(self):
+    async def main(self) -> list[Any] | tuple[
+        BaseException | Any, BaseException | Any, BaseException | Any, BaseException | Any, BaseException | Any]:
+
         async with aiohttp.ClientSession() as session:
             if self._api_req_depend:
                 results: List[Any] = []
                 for request in self._batch_req:
                     results.append(await self.fetch(session=session, request_obj=request))
+                return results
+            else:
+                tasks = [asyncio.ensure_future(self.fetch(session=session, request_obj=request)) for request in
+                         self._req_info]
+                responses = await asyncio.gather(*tasks)
+                return responses
