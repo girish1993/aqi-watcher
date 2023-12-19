@@ -1,0 +1,23 @@
+apis:
+  - name: aqi_api
+    connection: open_aqi_http_conn
+    description: Public API to fet Air quality index data for several countries
+    host: https://api.openaq.org/v2/
+    api_key: 6419d47442d2564bac23110efe7619d395307afd1d8304ea6830e94f844f7d26
+    endpoints:
+      - route: locations
+        method: GET
+        params:
+          limit: 1000
+          offset: 0
+          order_by: name
+          country: [ "AU", "IN" ]
+      - route: measurements
+        method: GET
+        params:
+          limit: 1000
+          offset: 0
+          date_from: 2020-01-01T00:00:00
+          date_to: 2023-12-20T00:00:00
+          sort: asc
+          country: [ "AU", "IN" ]
