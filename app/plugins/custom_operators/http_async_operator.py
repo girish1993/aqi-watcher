@@ -5,11 +5,9 @@ import multidict
 from airflow.models import Connection
 from airflow.models.baseoperator import BaseOperator
 from airflow.utils.context import Context
-from pyconfigparser import configparser
 
-from src.aqi_watcher.models.request_model import RequestModel
-from src.aqi_watcher.custom_hooks.http_custom_async_hook import HttpCustomAsyncHook
-from src.aqi_watcher.connectors.http_connector import HttpConnector
+from plugins.models.request_model import RequestModel
+from plugins.custom_hooks.http_custom_async_hook import HttpCustomAsyncHook
 
 
 class HttpAsyncOperator(BaseOperator):
@@ -20,20 +18,12 @@ class HttpAsyncOperator(BaseOperator):
         self._http_async_hook = None
 
     def execute(self, context: Context) -> Any:
-        # parse config
-        self.parse_requests_config()
-
-        # setup connection if not exists
-        http_connector: HttpConnector = HttpConnector(conn_id=self._config_requests.apis.connection, conn_type="http",
-                                                      host=self._config_requests.apis.host,
-                                                      description=self._config_requests.apis.description)
-        conn: Connection = http_connector.create_connection_if_not_exists()
 
         # prepare requests
         batch_requests: List[RequestModel] = self.setup_requests()
         http_async_hook: HttpCustomAsyncHook = HttpCustomAsyncHook(
             batch_req=batch_requests,
-            conn_obj=conn,
+            conn_obj=self.conn_obj,
             api_req_depend=False
         )
 
@@ -41,13 +31,8 @@ class HttpAsyncOperator(BaseOperator):
         loop = asyncio.get_event_loop()
         return loop.run_until_complete(http_async_hook.main())
 
-    def parse_requests_config(self):
-        self._config_requests = configparser.get_config(
-            config_dir="src/config", file_name="config.yaml"
-        )
-
     def setup_requests(self):
-        batch_requests: List[RequestModel] = []
+        batch_requests = []
         for each_api_batch in self._config_requests.apis:
             headers = {
                 "content-type": "application/json",

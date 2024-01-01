@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 from airflow.models import Connection
 
-from src.aqi_watcher.models.request_model import RequestModel
+from plugins.models.request_model import RequestModel
 
 
 class HttpCustomAsyncHook(BaseHook):
@@ -38,17 +38,11 @@ class HttpCustomAsyncHook(BaseHook):
 
     async def main(
             self,
-    ) -> list[Any] | tuple[
-        BaseException | Any,
-        BaseException | Any,
-        BaseException | Any,
-        BaseException | Any,
-        BaseException | Any,
-    ]:
+    ):
 
         async with aiohttp.ClientSession() as session:
             if self._api_req_depend:
-                results: List[Any] = []
+                results = []
                 for request in self._batch_req:
                     results.append(
                         await self.fetch(session=session, request_obj=request)

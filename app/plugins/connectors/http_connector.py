@@ -21,11 +21,9 @@ class HttpConnector(Connection):
         self.description = description
         self.host = host
 
-    def _get_connection(self) -> Connection | None:
+    def _get_connection(self) -> Connection:
         conn: Connection = super().get_connection_from_secrets(self.conn_id)
-        if conn:
-            return conn
-        return None
+        return conn
 
     def create_connection_if_not_exists(self) -> Connection:
         if self._get_connection() is not None:
