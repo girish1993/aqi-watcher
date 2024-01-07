@@ -1,4 +1,4 @@
-from util import Singleton
+from dags.util import Singleton
 import psycopg2
 
 

@@ -1,20 +1,20 @@
-from typing import Any, List, Dict
+from typing import List, Dict
 from airflow.hooks.base import BaseHook
 import asyncio
 import aiohttp
 from airflow.models import Connection
 
-from plugins.models.request_model import RequestModel
+from ..models.request_model import RequestModel
 
 
 class HttpCustomAsyncHook(BaseHook):
     def __init__(
-            self,
-            batch_req: List[RequestModel],
-            conn_obj: Connection,
-            api_req_depend: bool = True,
-            *args,
-            **kwargs
+        self,
+        batch_req: List[RequestModel],
+        conn_obj: Connection,
+        api_req_depend: bool = True,
+        *args,
+        **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         self._conn_obj = conn_obj
@@ -29,17 +29,16 @@ class HttpCustomAsyncHook(BaseHook):
     @staticmethod
     async def fetch(session, request_obj) -> Dict:
         async with session.request(
-                method=request_obj.method,
-                url=request_obj.url,
-                params=request_obj.params,
-                headers=request_obj.headers,
+            method=request_obj.method,
+            url=request_obj.url,
+            params=request_obj.params,
+            headers=request_obj.headers,
         ) as res:
             return await res.json()
 
     async def main(
-            self,
+        self,
     ):
-
         async with aiohttp.ClientSession() as session:
             if self._api_req_depend:
                 results = []

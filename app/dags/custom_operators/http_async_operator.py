@@ -5,9 +5,8 @@ import multidict
 from airflow.models import Connection
 from airflow.models.baseoperator import BaseOperator
 from airflow.utils.context import Context
-
-from plugins.models.request_model import RequestModel
-from plugins.custom_hooks.http_custom_async_hook import HttpCustomAsyncHook
+from ..models.request_model import RequestModel
+from ..custom_hooks.http_custom_async_hook import HttpCustomAsyncHook
 
 
 class HttpAsyncOperator(BaseOperator):
@@ -18,13 +17,10 @@ class HttpAsyncOperator(BaseOperator):
         self._http_async_hook = None
 
     def execute(self, context: Context) -> Any:
-
         # prepare requests
         batch_requests: List[RequestModel] = self.setup_requests()
         http_async_hook: HttpCustomAsyncHook = HttpCustomAsyncHook(
-            batch_req=batch_requests,
-            conn_obj=self.conn_obj,
-            api_req_depend=False
+            batch_req=batch_requests, conn_obj=self.conn_obj, api_req_depend=False
         )
 
         # create asyncio event loop

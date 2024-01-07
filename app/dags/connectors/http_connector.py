@@ -1,6 +1,7 @@
 from typing import Optional
 
 from airflow import settings
+from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Connection
 from airflow.settings import Session
 
@@ -21,15 +22,18 @@ class HttpConnector(Connection):
         self.description = description
         self.host = host
 
-    def _get_connection(self) -> Connection:
-        conn: Connection = super().get_connection_from_secrets(self.conn_id)
-        return conn
+    def _get_connection(self) -> Optional[Connection]:
+        try:
+            conn: Connection = super().get_connection_from_secrets(self.conn_id)
+            return conn
+        except AirflowNotFoundException as e:
+            return None
 
     def create_connection_if_not_exists(self) -> Connection:
-        if self._get_connection() is not None:
-            conn = super().__init__(self)
-            session: Session = settings.Session()
-            session.add(conn)
-            session.commit()
-            return conn
-        return self._get_connection()
+        if self._get_connection():
+            return self._get_connection()
+        conn = super().__init__(self)
+        session: Session = settings.Session()
+        session.add(conn)
+        session.commit()
+        return conn
