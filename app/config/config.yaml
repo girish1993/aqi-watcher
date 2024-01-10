@@ -1,6 +1,6 @@
 apis:
   - name: aqi_api
-    connection: open_aqi_http_conn
+    connection: open_aqi_http_connection
     description: Public API to fet Air quality index data for several countries
     host: https://api.openaq.org/v2/
     api_key: 6419d47442d2564bac23110efe7619d395307afd1d8304ea6830e94f844f7d26

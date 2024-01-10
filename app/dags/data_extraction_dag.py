@@ -17,7 +17,7 @@ def perform_data_extraction():
             print(e)
 
     @task
-    def get_or_create_conn(config: Dict) -> List[Connection]:
+    def get_or_create_conn(config: Dict) -> List[Dict[str, str]]:
         connections: List[HttpConnector] = [
             HttpConnector(
                 conn_id=config_item.get("connection"),
@@ -28,14 +28,12 @@ def perform_data_extraction():
             for config_item in config.get("apis")
         ]
 
-        return [
-            connection.create_connection_if_not_exists() for connection in connections
-        ]
+        print("set connections", [repr(connection.create_connection_if_not_exists()) for connection in connections])
+
+        return [repr(connection.create_connection_if_not_exists()) for connection in connections]
 
     config = setup_env()
-    print("config", config)
-    connection = get_or_create_conn(config)
-    print(connection)
+    set_connections = get_or_create_conn(config)
 
 
 perform_data_extraction()
