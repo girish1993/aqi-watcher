@@ -8,6 +8,8 @@ __pycache__/
 
 # Distribution / packaging
 .idea
+app/logs/
+idea/aqi-watcher.iml
 .Python
 build/
 develop-eggs/
