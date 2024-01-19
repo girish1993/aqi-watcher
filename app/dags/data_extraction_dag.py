@@ -2,9 +2,9 @@ from typing import Dict, List
 
 import pendulum
 from airflow.decorators import dag, task
-from lib.connectors.http_connector import HttpConnector
-from lib.custom_operators.http_async_operator import HttpAsyncOperator
-from lib.util.config_parser import parse_config
+from include.connectors.http_connector import HttpConnector
+from include.custom_operators.http_async_operator import HttpAsyncOperator
+from include.util.config_parser import parse_config
 
 
 @dag(dag_id="data_ex_1", start_date=pendulum.now(), schedule="@daily", catchup=False)
