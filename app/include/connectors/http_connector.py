@@ -8,13 +8,13 @@ from airflow.settings import Session
 
 class HttpConnector(Connection):
     def __init__(
-            self,
-            conn_id: str,
-            conn_type: str,
-            host: str,
-            description: Optional[str] = None,
-            *args,
-            **kwargs
+        self,
+        conn_id: str,
+        conn_type: str,
+        host: str,
+        description: Optional[str] = None,
+        *args,
+        **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         self.conn_id = conn_id
@@ -24,7 +24,7 @@ class HttpConnector(Connection):
 
     def serialise(self) -> Dict:
         serialized_dict = self.__dict__.copy()
-        serialized_dict.pop('_sa_instance_state', None)
+        serialized_dict.pop("_sa_instance_state", None)
         return serialized_dict
 
     def _get_connection(self) -> Optional[Connection]:
@@ -37,8 +37,12 @@ class HttpConnector(Connection):
     def create_connection_if_not_exists(self) -> None:
         if self._get_connection():
             return self._get_connection()
-        conn = Connection(conn_id=self.conn_id, conn_type=self.conn_type, description=self.description,
-                          host=self.host)
+        conn = Connection(
+            conn_id=self.conn_id,
+            conn_type=self.conn_type,
+            description=self.description,
+            host=self.host,
+        )
         session: Session = settings.Session()
         session.add(conn)
         session.commit()

@@ -29,17 +29,27 @@ def perform_data_extraction():
         ]
 
         [connection.create_connection_if_not_exists() for connection in connections]
-        print("set_connections", [connection.serialise() for connection in connections])
         return [connection.serialise() for connection in connections]
 
     @task
-    def make_http_calls(config: Dict):
-        opera_1 = HttpAsyncOperator(task_id="http_conn", conn_obj=config)
-        print(opera_1)
+    def make_http_calls(config: Dict, connections: List[Dict]):
+        results: List[Dict] = []
+        for i, conn in enumerate(connections):
+            res = next(
+                (
+                    item
+                    for item in config.get("apis")
+                    if item.get("connection") == conn.get("conn_id")
+                ),
+                None,
+            )
+            x = HttpAsyncOperator(task_id=f"{conn.get('connection')}_{i}", conn_obj=res)
+            results.append(x.execute())
+        return results
 
     config = setup_env()
     set_connections = get_or_create_conn(config)
-    # make_http_calls(config=set_connections)
+    results = make_http_calls(config=config, connections=set_connections)
 
 
 perform_data_extraction()
