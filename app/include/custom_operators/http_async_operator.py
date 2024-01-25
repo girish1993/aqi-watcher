@@ -4,7 +4,7 @@ from typing import Any, List, Dict
 import multidict
 from airflow.models.baseoperator import BaseOperator
 from airflow.utils.context import Context
-from include.models.request_model import RequestModel
+from include.dto.request_dto import RequestModel
 from include.custom_hooks.http_custom_async_hook import HttpCustomAsyncHook
 
 
@@ -31,8 +31,9 @@ class HttpAsyncOperator(BaseOperator):
         for endpoint in self.conn_obj.get("endpoints"):
             method = endpoint.get("method")
             params = multidict.MultiDict(endpoint.get("params"))
+            route = endpoint.get('route')
             url = f"{self.conn_obj.get('host')}{endpoint.get('route')}"
             batch_requests.append(
-                RequestModel(method=method, url=url, params=params, headers=headers)
+                RequestModel(method=method, url=url, params=params, headers=headers, route=route)
             )
         return batch_requests

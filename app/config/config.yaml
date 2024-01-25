@@ -20,7 +20,7 @@ apis:
           limit: 1000
           offset: 0
           date_from: "2023-11-01T00:00:00"
-          date_to: "2023-12-01T00:00:00"
+          date_to: "2023-11-02T00:00:00"
           sort: asc
           country:
             - AU

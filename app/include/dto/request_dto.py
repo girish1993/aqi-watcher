@@ -7,6 +7,7 @@ from multidict import MultiDict
 class RequestModel:
     method: str
     url: str
+    route: str
     params: Optional[MultiDict] = None
     data: Optional[Dict] = None
     headers: Optional[Dict] = None
