@@ -76,8 +76,7 @@ class DataFactory:
         for item in data:
             for res_obj in item:
                 key = next(iter(res_obj))
-                data = res_obj.get(key).get("results")
-                print("key", key)
+                data = res_obj.get(key)
                 cls.create_instance_and_populate(key=key, data=data)
 
         results = [{k: len(v)} for k, v in cls._results.items()]

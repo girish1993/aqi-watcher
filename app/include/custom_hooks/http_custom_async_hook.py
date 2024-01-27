@@ -28,13 +28,27 @@ class HttpCustomAsyncHook(BaseHook):
 
     @staticmethod
     async def fetch(session, request_obj) -> Dict:
-        async with session.request(
-                method=request_obj.method,
-                url=request_obj.url,
-                params=request_obj.params,
-                headers=request_obj.headers,
-        ) as res:
-            return {request_obj.route: await res.json()}
+        page: int = 1
+        result = []
+        while True:
+            request_obj.params["page"] = page
+            async with session.request(
+                    method=request_obj.method,
+                    url=request_obj.url,
+                    params=request_obj.params,
+                    headers=request_obj.headers,
+            ) as res:
+                page_data = await res.json()
+                if page_data.get("results") is not None:
+                    result += page_data.get("results")
+                    if len(page_data.get("results")) == request_obj.params.get(
+                            "limit"):
+                        page += 1
+                    else:
+                        break
+                else:
+                    break
+        return {request_obj.route: result}
 
     async def main(
             self,
