@@ -27,3 +27,8 @@ apis:
           country:
             - AU
             - IN
+db:
+  - name: timescaledb
+    connection: timescaledb_connection
+    description: db to store aqi info
+    login: timescaledb

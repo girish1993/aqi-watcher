@@ -4,17 +4,18 @@ from airflow import settings
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import Connection
 from airflow.settings import Session
+from include.connectors.base_connection import BaseConnection
 
 
-class HttpConnector(Connection):
+class HttpConnector(BaseConnection):
     def __init__(
-        self,
-        conn_id: str,
-        conn_type: str,
-        host: str,
-        description: Optional[str] = None,
-        *args,
-        **kwargs
+            self,
+            conn_id: str,
+            conn_type: str,
+            host: str,
+            description: Optional[str] = None,
+            *args,
+            **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         self.conn_id = conn_id
@@ -29,7 +30,7 @@ class HttpConnector(Connection):
 
     def _get_connection(self) -> Optional[Connection]:
         try:
-            conn: Connection = super().get_connection_from_secrets(self.conn_id)
+            conn: Connection = Connection.get_connection_from_secrets(self.conn_id)
             return conn
         except AirflowNotFoundException as e:
             return None

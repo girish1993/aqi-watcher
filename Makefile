@@ -1,10 +1,10 @@
-.PHONY: run down airflow-init airflow-run airflow-down code-format
+.PHONY: timescale-run timescale-down airflow-init airflow-run airflow-down code-format
 
-run:
-	docker compose up
+timescale-run:
+	docker compose -f docker-compose.timescale.yaml build && docker compose -f docker-compose.timescale.yaml up
 
-down:
-	docker compose down
+timescale-down:
+	docker compose -f docker-compose.timescale.yml down
 
 airflow-init:
 	docker compose -f docker-compose.airflow.yaml up airflow-init

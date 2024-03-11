@@ -5,7 +5,7 @@ services:
     image: timescale/timescaledb:latest-pg14
     restart: always
     ports:
-      - "30:30"
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}

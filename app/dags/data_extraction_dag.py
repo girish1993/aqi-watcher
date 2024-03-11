@@ -2,6 +2,7 @@ from typing import Dict, List
 
 import pendulum
 from airflow.decorators import dag, task
+import pandas as pd
 from include.connectors.http_connector import HttpConnector
 from include.custom_operators.http_async_operator import HttpAsyncOperator
 from include.util.config_parser import parse_config
@@ -52,6 +53,10 @@ def perform_data_extraction():
     def format_responses(responses: List[List[Dict]]) -> Dict[str, List[Dict]]:
         return DataFactory.formulate(data=responses)
 
+    @task
+    def flush_to_db(results: Dict[str, List[Dict]]) -> None:
+        dfs: List[pd.DataFrame] = [pd.DataFrame(v) for k, v in results]
+        
     config = setup_env()
     set_connections = get_or_create_conn(config)
     api_responses = make_http_calls(config_obj=config, connections=set_connections)
